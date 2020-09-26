@@ -1,0 +1,77 @@
+
+Install Epel 7
+rpm -ivh http://rpmfind.net/linux/epel/7/x86_64/Packages/e/epel-release-7-12.noarch.rpm
+
+Require dependencies
+yum -y install git gcc gcc-c++ lvm2 bzip2 gettext nodejs yum-utils device-mapper-persistent-data ansible python-pip
+
+Remove docker packers
+yum -y remove docker docker-common docker-selinux docker-engine
+
+Clone docker repo
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+Install docker-ce
+yum -y install docker-ce
+
+start Docker
+systemctl start docker && systemctl enable docker
+
+pip install -U docker-py
+
+pip show docker-py
+
+yum install python3 -y
+
+yum install libselinux-python3
+
+pip3 install docker
+
+pip3 install docker-compose
+
+
+git clone --depth 50 https://github.com/ansible/awx.git
+
+cd awx/installer/
+
+
+grep -v '^ *#' inventory | sed '/^$/d'
+
+sed -i 's|admin_password=password|admin_password=yournewpass|g' inventory
+
+
+openssl rand -base64 30
+(Copy the screte key)
+
+sed -i 's|secret_key=awxsecret|secret_key=PASTE-SECRETE-KEY-HERE|g' inventory
+
+grep -v '^ *#' inventory | sed '/^$/d'
+
+ansible-playbook -i inventory install.yml
+
+Make sure port 80 is open
+
+http://ip
+
+
+
+
+localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3"
+[all:vars]
+dockerhub_base=ansible
+awx_task_hostname=awx
+awx_web_hostname=awxweb
+postgres_data_dir="/var/lib/awx/pgdocker"
+host_port=80
+host_port_ssl=443
+docker_compose_dir="/var/lib/awx"
+pg_username=awx
+pg_password=awxpass
+pg_database=awx
+pg_port=5432
+admin_user=system
+admin_password=question
+create_preload_data=True
+secret_key=o0AAfyKCvCEHN2Mp70bOWDXLDEvYOvwi5YFxGyDD
+ awx_official=true
+awx_alternate_dns_servers="8.8.8.8,8.8.4.4"
